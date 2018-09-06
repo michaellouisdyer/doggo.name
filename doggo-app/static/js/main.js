@@ -44,7 +44,7 @@ $(document).ready(function () {
                 // Get and display the result
                 $('.loader').hide();
                 $('#result').fadeIn(600);
-                $('#result').html(' Result:<br>' + data);
+                $('#result').html(data);
                 console.log('Success!');
             },
         });
