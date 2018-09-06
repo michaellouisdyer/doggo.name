@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block content %}
+
+<h2 align="center" style='font-size:4vh;'>Dog breed classifier, powered by deep learning</h2>
+<div class="mobileShow">
+  <h2 align="center" style='font-size:3vh;'> Mobile currently only supports images taken in landscape with the camera on the left</h2>
+</div>
+<br>
+
+<div align="center">
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+        <label for="imageUpload" class="upload-label">
+            Upload Image
+        </label>
+        <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg">
+    </form>
+
+    <div class="image-section" style="display:none;" align="center">
+        <div class="img-preview">
+            <div id="imagePreview">
+            </div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary btn-md" id="btn-predict">What kind of doggo is my pupper?</button>
+        </div>
+    </div>
+
+    <div class="loader" style="font-size: 3vh; display: none;" align="center"></div>
+
+    <h3 id="result" align="center">
+        <span> </span>
+    </h3>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,378 @@
+(lp0
+S'Affenpinscher'
+p1
+aS'Afghan Hound'
+p2
+aS'Airedale Terrier'
+p3
+aS'Akita'
+p4
+aS'Alaskan Malamute'
+p5
+aS'American English Coonhound'
+p6
+aS'American Eskimo Dog'
+p7
+aS'American Foxhound'
+p8
+aS'American Hairless Terrier'
+p9
+aS'American Staffordshire Terrier'
+p10
+aS'Anatolian Shepherd Dog'
+p11
+aS'Australian Cattle Dog'
+p12
+aS'Australian Shepherd'
+p13
+aS'Australian Terrier'
+p14
+aS'Basenji'
+p15
+aS'Basset Hound'
+p16
+aS'Beagle'
+p17
+aS'Bearded Collie'
+p18
+aS'Beauceron'
+p19
+aS'Bedlington Terrier'
+p20
+aS'Belgian Malinois'
+p21
+aS'Belgian Sheepdog'
+p22
+aS'Belgian Tervuren'
+p23
+aS'Bergamasco Sheepdog'
+p24
+aS'Berger Picard'
+p25
+aS'Bernese Mountain Dog'
+p26
+aS'Bichons Frise'
+p27
+aS'Black Russian Terrier'
+p28
+aS'Black and Tan Coonhound'
+p29
+aS'Bloodhound'
+p30
+aS'Bluetick Coonhound'
+p31
+aS'Boerboel'
+p32
+aS'Border Collie'
+p33
+aS'Border Terrier'
+p34
+aS'Borzoi'
+p35
+aS'Boston Terrier'
+p36
+aS'Bouviers des Flandre'
+p37
+aS'Boxer'
+p38
+aS'Briard'
+p39
+aS'Brittany'
+p40
+aS'Brussels Griffon'
+p41
+aS'Bull Terrier'
+p42
+aS'Bulldog'
+p43
+aS'Bullmastiff'
+p44
+aS'Cairn Terrier'
+p45
+aS'Canaan Dog'
+p46
+aS'Cane Corso'
+p47
+aS'Cardigan Welsh Corgi'
+p48
+aS'Cavalier King Charles Spaniel'
+p49
+aS'Cesky Terrier'
+p50
+aS'Chihuahua'
+p51
+aS'Chinese Crested'
+p52
+aS'Chinese Shar-Pei'
+p53
+aS'Chinook'
+p54
+aS'Chow Chow'
+p55
+aS'Cirneco dell Etna'
+p56
+aS'Collie'
+p57
+aS'Coton de Tulear'
+p58
+aS'Dachshund'
+p59
+aS'Dalmatian'
+p60
+aS'Dandie Dinmont Terrier'
+p61
+aS'Doberman Pinscher'
+p62
+aS'Dogues de Bordeaux'
+p63
+aS'English Foxhound'
+p64
+aS'English Toy Spaniel'
+p65
+aS'Entlebucher Mountain Dog'
+p66
+aS'Finnish Lapphund'
+p67
+aS'Finnish Spitz'
+p68
+aS'Fox Terrier (Smooth)'
+p69
+aS'Fox Terrier (Wire)'
+p70
+aS'French Bulldog'
+p71
+aS'German Pinscher'
+p72
+aS'German Shepherd'
+p73
+aS'Giant Schnauzer'
+p74
+aS'Glen of Imaal Terrier'
+p75
+aS'Great Dane'
+p76
+aS'Great Pyrenees'
+p77
+aS'Greater Swiss Mountain Dog'
+p78
+aS'Greyhound'
+p79
+aS'Harrier'
+p80
+aS'Havanese'
+p81
+aS'Ibizan Hound'
+p82
+aS'Icelandic Sheepdog'
+p83
+aS'Irish Terrier'
+p84
+aS'Irish Wolfhound'
+p85
+aS'Italian Greyhound'
+p86
+aS'Japanese Chin'
+p87
+aS'Keeshonden'
+p88
+aS'Kerry Blue Terrier'
+p89
+aS'Komondorok'
+p90
+aS'Kuvaszok'
+p91
+aS'Lagotti Romagnoli'
+p92
+aS'Lakeland Terrier'
+p93
+aS'Leonberger'
+p94
+aS'Lhasa Apso'
+p95
+aS'Lowchen'
+p96
+aS'Maltese'
+p97
+aS'Manchester Terrier'
+p98
+aS'Miniature American Shepherd'
+p99
+aS'Miniature Bull Terrier'
+p100
+aS'Miniature Pinscher'
+p101
+aS'Miniature Schnauzer'
+p102
+aS'Neapolitan Mastiff'
+p103
+aS'Newfoundland'
+p104
+aS'Norfolk Terrier'
+p105
+aS'Norwegian Buhund'
+p106
+aS'Norwegian Elkhound'
+p107
+aS'Norwegian Lundehund'
+p108
+aS'Norwich Terrier'
+p109
+aS'Old English Sheepdog'
+p110
+aS'Otterhound'
+p111
+aS'Papillon'
+p112
+aS'Parson Russell Terrier'
+p113
+aS'Pekingese'
+p114
+aS'Pembroke Welsh Corgi'
+p115
+aS'Petits Bassets Griffons Vendeen'
+p116
+aS'Pharaoh Hound'
+p117
+aS'Plott'
+p118
+aS'Pointer'
+p119
+aS'Pointer (German Shorthaired)'
+p120
+aS'Pointer (German Wirehaired)'
+p121
+aS'Polish Lowland Sheepdog'
+p122
+aS'Pomeranian'
+p123
+aS'Poodle'
+p124
+aS'Portuguese Podengo Pequeno'
+p125
+aS'Portuguese Water Dog'
+p126
+aS'Pug'
+p127
+aS'Puli'
+p128
+aS'Pumi'
+p129
+aS'Pyrenean Shepherd'
+p130
+aS'Rat Terrier'
+p131
+aS'Redbone Coonhound'
+p132
+aS'Retriever (Chesapeake Bay)'
+p133
+aS'Retriever (Curly-Coated)'
+p134
+aS'Retriever (Flat-Coated)'
+p135
+aS'Retriever (Golden)'
+p136
+aS'Retriever (Labrador)'
+p137
+aS'Retriever (Nova Scotia Duck Tolling)'
+p138
+aS'Rhodesian Ridgeback'
+p139
+aS'Rottweiler'
+p140
+aS'Russell Terrier'
+p141
+aS'Saluki'
+p142
+aS'Samoyed'
+p143
+aS'Schipperke'
+p144
+aS'Scottish Deerhound'
+p145
+aS'Scottish Terrier'
+p146
+aS'Sealyham Terrier'
+p147
+aS'Setter (English)'
+p148
+aS'Setter (Gordon)'
+p149
+aS'Setter (Irish Red and White)'
+p150
+aS'Setter (Irish)'
+p151
+aS'Shetland Sheepdog'
+p152
+aS'Shiba Inu'
+p153
+aS'Shih Tzu'
+p154
+aS'Siberian Husky'
+p155
+aS'Silky Terrier'
+p156
+aS'Skye Terrier'
+p157
+aS'Sloughi'
+p158
+aS'Soft Coated Wheaten Terrier'
+p159
+aS'Spaniel (American Water)'
+p160
+aS'Spaniel (Boykin)'
+p161
+aS'Spaniel (Clumber)'
+p162
+aS'Spaniel (Cocker)'
+p163
+aS'Spaniel (English Cocker)'
+p164
+aS'Spaniel (Field)'
+p165
+aS'Spaniel (Irish Water)'
+p166
+aS'Spaniel (Sussex)'
+p167
+aS'Spaniel (Welsh Springer)'
+p168
+aS'Spanish Water Dog'
+p169
+aS'Spinoni Italiani'
+p170
+aS'St. Bernard'
+p171
+aS'Staffordshire Bull Terrier'
+p172
+aS'Standard Schnauzer'
+p173
+aS'Swedish Vallhund'
+p174
+aS'Tibetan Mastiff'
+p175
+aS'Tibetan Spaniel'
+p176
+aS'Tibetan Terrier'
+p177
+aS'Toy Fox Terrier'
+p178
+aS'Treeing Walker Coonhound'
+p179
+aS'Vizsla'
+p180
+aS'Weimaraner'
+p181
+aS'Welsh Terrier'
+p182
+aS'West Highland White Terrier'
+p183
+aS'Whippet'
+p184
+aS'Wirehaired Pointing Griffon'
+p185
+aS'Wirehaired Vizsla'
+p186
+aS'Xoloitzcuintli'
+p187
+aS'Yorkshire Terrier'
+p188
+a.
