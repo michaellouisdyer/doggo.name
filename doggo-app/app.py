@@ -9,7 +9,7 @@ import sys
 import numpy as np
 # from keras.preprocessing import image
 import pandas as pd
-# from PIL import Image, ExifTags
+from PIL import Image, ExifTags
 # Flask utils
 from flask import Flask, redirect, render_template, request, url_for
 from gevent.pywsgi import WSGIServer
@@ -26,16 +26,32 @@ from models.Adam_lr_mult import Adam_lr_mult
 # Define a flask app
 app = Flask(__name__)
 
-MODEL_PATH = 'models/xc_adam_doggo_huge.04-0.69.hdf5'
-with open ('models/class_names.pkl', 'rb') as f:
-    class_names = np.array(pickle.load(f))
+
+def rotate_save(f, file_path):
+    try:
+        image=Image.open(f)
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation]=='Orientation':
+                break
+        exif=dict(image._getexif().items())
+
+        if exif[orientation] == 3:
+            image=image.rotate(180, expand=True)
+        elif exif[orientation] == 6:
+            image=image.rotate(270, expand=True)
+        elif exif[orientation] == 8:
+            image=image.rotate(90, expand=True)
+        image.save(file_path)
+        image.close()
+
+    except (AttributeError, KeyError, IndexError):
+        # cases: image don't have getexif
+        image.save(file_path)
+        image.close()
+
+        pass
 
 
-# Load trained model
-# Since I used a custom optimizer, I have to define and load it here
-model = load_model(MODEL_PATH, custom_objects={'Adam_lr_mult': Adam_lr_mult})
-model._make_predict_function()
-print('Model loaded. Start serving...')
 
 def process_img(filename):
     """
@@ -76,11 +92,12 @@ def upload():
         basepath = os.path.dirname(__file__)
         file_path = os.path.join(
             basepath, 'uploads', secure_filename(f.filename))
-        f.save(file_path)
+        # f.save(file_path)
+        rotate_save(f, file_path)
 
         # Make prediction
         preds = model_predict(file_path, model)
-        
+
         # Delete it so we don't clutter our server up
         os.remove(file_path)
 
@@ -92,6 +109,20 @@ def upload():
 
 
 if __name__ == '__main__':
+
+    MODEL_PATH = 'models/xc_adam_doggo_huge.04-0.69.hdf5'
+    with open ('models/class_names.pkl', 'rb') as f:
+        class_names = np.array(pickle.load(f))
+
+
+    # Load trained model
+    # Since I used a custom optimizer, I have to define and load it here
+    model = load_model(MODEL_PATH, custom_objects={'Adam_lr_mult': Adam_lr_mult})
+    model._make_predict_function()
+    print('Model loaded. Start serving...')
+
+
+
     # app.run(port=5002, debug=True)
 
     # Serve the app with gevent
