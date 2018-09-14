@@ -3,7 +3,7 @@ from keras.utils import multi_gpu_model
 
 
 class ModelMGPU(Model):
-    def __init__(self, ser_model, gpus):
+    def __init__(self, ser_model):
         pmodel = multi_gpu_model(ser_model)
         self.__dict__.update(pmodel.__dict__)
         self._smodel = ser_model

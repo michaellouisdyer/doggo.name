@@ -1,22 +1,17 @@
 # Simple CNN with multi-GPU support
-from keras import models
-from keras import optimizers
-import keras
 import os
-from keras.models import Sequential, load_model
-from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
-from keras import optimizers
-from keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
-from keras.applications.imagenet_utils import decode_predictions
-from keras.callbacks import TensorBoard
-import tensorflow as tf
-import numpy as np
-from tensorflow.python.lib.io import file_io
-from keras.optimizers import SGD, nadam
-from PIL import ImageFile
 
-from run_model import save_class_names, train, create_generators
+import tensorflow as tf
+from keras import models
+from keras.callbacks import TensorBoard
+from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, MaxPooling2D
+from keras.models import Sequential
+from keras.optimizers import nadam
+from PIL import ImageFile
+from tensorflow.python.lib.io import file_io
+
+from ModelMGPU import ModelMGPU
+from run_model import create_generators, save_class_names, train
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -51,9 +46,13 @@ def create_model(input_size, n_categories):
 
 
 if __name__ == '__main__':
+    project_name = 'simple_cnn'
+
     target_size = (224, 224)
     input_size = target_size + (3,)
 
+    train_folder = 'data/train'
+    validation_folder = 'data/validation'
     n_categories = sum(len(dirnames) for _, dirnames, _ in os.walk(train_folder))
 
     # Initialize project name for saving model weights and stats
@@ -67,12 +66,9 @@ if __name__ == '__main__':
     # Important to utilize CPUs even when training on multi-GPU instances as the CPUs can be a bottle neck when feeding to the GPUs
     CPUS = 16
 
-    train_folder = 'data/train'
-    validation_folder = 'data/validation'
-
     save_class_names(train_folder, project_name)
 
-    model = create_model(input_size)
+    model = create_model(input_size, n_categories)
 
     # Initialize a dictionary with the layer name and corresponding learning rate ratio
 
@@ -84,8 +80,8 @@ if __name__ == '__main__':
         model = ModelMGPU(model)
 
     # Create data generators
-    train_datagen, validation_datagen, train_generator, validation_generator = create_generators(
+    train_datagen, validation_datagen, train_generator, validation_generator, nTrain, nVal = create_generators(
         augmentation_strength, target_size, batch_size, train_folder, validation_folder, preprocessing_function=None)
 
     train(model, train_datagen, validation_datagen, train_generator,
-          validation_generator, epochs, batch_size, CPUS)
+          validation_generator, epochs, batch_size,  project_name, nTrain, nVal, CPUS)
