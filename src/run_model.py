@@ -25,17 +25,19 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 get_custom_objects().update({"Adam_lr_mult": Adam_lr_mult})
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("model_name", help="model save name")
     return parser.parse_args()
 
+
 class ClassificationNet(object):
     """Keras Image Classifier with added methods to create directory datagens and evaluate on holdout set
         """
 
-    def __init__(self,  project_name, target_size, train_folder, validation_folder, holdout_folder, optimizer = 'Adam', model_fxn= None, augmentation_strength=0.1, preprocessing=None,
-                    batch_size=16, GPUS = None, metrics = ['accuracy']):
+    def __init__(self,  project_name, target_size, train_folder, validation_folder, holdout_folder, optimizer='Adam', model_fxn=None, augmentation_strength=0.1, preprocessing=None,
+                 batch_size=16, GPUS=None, metrics=['accuracy']):
         """
         Initialize class with basic attributes
 
@@ -49,7 +51,7 @@ class ClassificationNet(object):
             """
         self.project_name = project_name
         self.target_size = target_size
-        self.input_size = self.target_size + (3,) # target size with color chennels
+        self.input_size = self.target_size + (3,)  # target size with color chennels
         self.train_datagen = ImageDataGenerator()
         self.validation_datagen = ImageDataGenerator()
         self.augmentation_strength = augmentation_strength
@@ -57,16 +59,15 @@ class ClassificationNet(object):
         self.validation_generator = None
         self.batch_size = batch_size
         self.preprocessing = preprocessing
-        self.class_names =  None
+        self.class_names = None
         self.training_weight_dict = None
-        self.GPUS =  GPUS
+        self.GPUS = GPUS
         self.metrics = metrics
 
         if not os.path.exists('models/' + self.project_name):
             os.makedirs("models/" + self.project_name)
 
         self._training_init(train_folder, validation_folder, holdout_folder, optimizer, model_fxn)
-
 
     def _init_data(self, train_folder, validation_folder, holdout_folder):
         """
@@ -81,15 +82,19 @@ class ClassificationNet(object):
         self.validation_folder = validation_folder
         self.holdout_folder = holdout_folder
 
-        self.n_train = sum(len(files) for _, _, files in os.walk(self.train_folder)) #: number of training samples
+        self.n_train = sum(len(files) for _, _, files in os.walk(
+            self.train_folder))  # : number of training samples
 
-        self.n_val = sum(len(files) for _, _, files in os.walk(self.validation_folder)) #: number of validation samples
+        self.n_val = sum(len(files) for _, _, files in os.walk(
+            self.validation_folder))  # : number of validation samples
 
-        self.n_holdout = sum(len(files) for _, _, files in os.walk(self.holdout_folder)) #: number of holdout samples
+        self.n_holdout = sum(len(files) for _, _, files in os.walk(
+            self.holdout_folder))  # : number of holdout samples
 
-        self.n_categories = sum(len(dirnames) for _, dirnames, _ in os.walk(self.train_folder)) #: number of categories
+        self.n_categories = sum(len(dirnames) for _, dirnames, _ in os.walk(
+            self.train_folder))  # : number of categories
 
-        self.set_class_names() #: text representation of classes
+        self.set_class_names()  # : text representation of classes
 
     def load_model(self, model_path):
         self.model = load_model(model_path)
@@ -102,8 +107,8 @@ class ClassificationNet(object):
         # Set parameters for processing and augmenting images
         self.train_datagen = ImageDataGenerator(
             preprocessing_function=self.preprocessing,
-            brightness_range = [0.2,0.8],
-            horizontal_flip = True,
+            brightness_range=[0.2, 0.8],
+            horizontal_flip=True,
             rotation_range=15*self.augmentation_strength,
             width_shift_range=self.augmentation_strength / 4,
             height_shift_range=self.augmentation_strength / 4,
@@ -146,7 +151,7 @@ class ClassificationNet(object):
     def make_callbacks(self):
             # Initialize tensorboard for monitoring
         tensorboard = keras.callbacks.TensorBoard(
-        log_dir="models/" + self.project_name, histogram_freq=0, batch_size=self.batch_size, write_graph=True, embeddings_freq=0)
+            log_dir="models/" + self.project_name, histogram_freq=0, batch_size=self.batch_size, write_graph=True, embeddings_freq=0)
 
         # Initialize model checkpoint to save best model
         self.savename = 'models/'+self.project_name+"/"+self.project_name+'.hdf5'
@@ -154,14 +159,12 @@ class ClassificationNet(object):
                                              monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
         self.callbacks = [mc, tensorboard]
 
-
     def _training_init(self, train_folder, validation_folder, holdout_folder, optimizer, model_fxn):
         self._init_data(train_folder, validation_folder, holdout_folder)
         self._create_generators()
         self.make_callbacks()
         # self.model = self.create_compiled_model(optimizer, model_fxn)
         self.model = self.create_compiled_model(optimizer, model_fxn)
-
 
     def fit(self, epochs):
         """
@@ -184,15 +187,15 @@ class ClassificationNet(object):
             self.model = ModelMGPU(self.model)
 
         history = self.model.fit_generator(self.train_generator,
-                                        class_weight = self.training_weight_dict,
-                                        steps_per_epoch=self.n_train/self.batch_size,
-                                        epochs=epochs,
-                                        validation_data=self.validation_generator,
-                                        validation_steps=self.n_val/self.batch_size,
-                                        callbacks=self.callbacks)
+                                           class_weight=self.training_weight_dict,
+                                           steps_per_epoch=self.n_train/self.batch_size,
+                                           epochs=epochs,
+                                           validation_data=self.validation_generator,
+                                           validation_steps=self.n_val/self.batch_size,
+                                           callbacks=self.callbacks)
 
         best_model = load_model(self.savename)
-        self.model =  best_model
+        self.model = best_model
         print("Evaluating model")
         accuracy = self.evaluate_model(best_model)
         print("accuracy")
@@ -206,7 +209,6 @@ class ClassificationNet(object):
         Returns:
             list(float): metrics returned by the model, typically [loss, accuracy]
             """
-
 
         metrics = model.evaluate_generator(self.holdout_generator,
                                            steps=self.n_holdout/self.batch_size,
@@ -229,7 +231,7 @@ class ClassificationNet(object):
         for i, layer in enumerate(model.layers[indices:]):
             print(f"Layer {i+indices} | Name: {layer.name} | Trainable: {layer.trainable}")
 
-    def process_img(self,img_path):
+    def process_img(self, img_path):
         """
         Loads image from filename, preprocesses it and expands the dimensions because the model predict function expects a batch of images, not one image
         Args:
@@ -237,13 +239,13 @@ class ClassificationNet(object):
         Returns:
             np.array: preprocessed image
         """
-        original = load_img(filename, target_size = self.target_size)
-        numpy_image = self.preprocessing( img_to_array(original))
-        image_batch = np.expand_dims(numpy_image, axis =0)
+        original = load_img(filename, target_size=self.target_size)
+        numpy_image = self.preprocessing(img_to_array(original))
+        image_batch = np.expand_dims(numpy_image, axis=0)
 
         return image_batch
 
-    def model_predict(self, img_path,model):
+    def model_predict(self, img_path, model):
         """
         Uses an image and a model to return the names and the predictions of the top 3 classes
 
@@ -254,36 +256,37 @@ class ClassificationNet(object):
         Returns:
             str: top 3 predictions
             """
-        im =  self.process_img(img_path)
-        preds =  model.predict(im)
-        top_3 = preds.argsort()[0][::-1][:3] # sort in reverse order and return top 3 indices
+        im = self.process_img(img_path)
+        preds = model.predict(im)
+        top_3 = preds.argsort()[0][::-1][:3]  # sort in reverse order and return top 3 indices
         top_3_names = self.class_names[top_3]
         top_3_percent = preds[0][[top_3]]*100
-        top_3_text = '\n'.join([f'{name}: {percent:.2f}%' for name, percent in zip(top_3_names,top_3_percent)])
+        top_3_text = '\n'.join([f'{name}: {percent:.2f}%' for name,
+                                percent in zip(top_3_names, top_3_percent)])
         return top_3_text
 
     def set_class_names(self):
         """
         Sets the class names, sorted by alphabetical order
         """
-        self.category_df = pd.DataFrame([(len(files), os.path.basename(dirname)) for dirname, _, files in os.walk(self.train_folder)]).drop(0)
+        self.category_df = pd.DataFrame([(len(files), os.path.basename(dirname))
+                                         for dirname, _, files in os.walk(self.train_folder)]).drop(0)
 
         self.category_df.columns = ["n_images", "class"]
         self.category_df = self.category_df.sort_values("class")
         print(self.category_df)
         weights = self.category_df["n_images"]/self.category_df["n_images"].sum()
         self.training_weight_dict = dict(zip(range(weights.shape[0]), weights.values))
-        self.class_names  = list(self.category_df["class"])
+        self.class_names = list(self.category_df["class"])
         joblib.dump(self.class_names, 'models/'+self.project_name + "/class_names.joblib")
-
 
 
 class LayerTransferClassificationNet(ClassificationNet):
     """Keras Image Classifier with added methods to create directory datagens and evaluate on holdout set
         """
 
-    def create_learn_rate_dict(self, model, base_layer_learn_ratio = 0.1,
-        final_layer_learn_ratio = 1):
+    def create_learn_rate_dict(self, model, base_layer_learn_ratio=0.1,
+                               final_layer_learn_ratio=1):
         """
         Since we're using a custom optimizer with a different learning rate for each layer, we need to initialize a dictionary of layer names and weights. Here I'm using one lower value for all but the last layer
         """
@@ -302,7 +305,6 @@ class LayerTransferClassificationNet(ClassificationNet):
         model = Model(inputs=base_model.input, outputs=predictions)
         return model
 
-
     def update_base_model(self, model):
         """
         Prepare base model for transfer learning
@@ -320,8 +322,6 @@ class LayerTransferClassificationNet(ClassificationNet):
         return model
 
 
-
-
 def main(args):
     base_path = 'data'
 
@@ -334,24 +334,14 @@ def main(args):
     batch_size = 32
 
     model_fxn = Xception(weights='imagenet',
-                          include_top=False,
-                          input_shape=target_size + (3,))
+                         include_top=False,
+                         input_shape=target_size + (3,))
     opt = Adam_lr_mult
 
-    lt_model = LayerTransferClassificationNet(args.model_name, target_size=target_size, train_folder=train_folder, validation_folder=validation_folder, holdout_folder=holdout_folder, model_fxn=model_fxn, optimizer=opt, augmentation_strength=0.4, preprocessing=preprocess_input,  batch_size=batch_size)
+    lt_model = LayerTransferClassificationNet(args.model_name, target_size=target_size, train_folder=train_folder, validation_folder=validation_folder,
+                                              holdout_folder=holdout_folder, model_fxn=model_fxn, optimizer=opt, augmentation_strength=0.4, preprocessing=preprocess_input,  batch_size=batch_size)
 
     lt_model.fit(epochs)
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
