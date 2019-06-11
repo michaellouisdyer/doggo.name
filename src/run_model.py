@@ -36,7 +36,9 @@ class ClassificationNet(object):
     """Keras Image Classifier with added methods to create directory datagens and evaluate on holdout set
         """
 
-    def __init__(self,  project_name, target_size, train_folder, validation_folder, holdout_folder, optimizer='Adam', model_fxn=None, augmentation_strength=0.1, preprocessing=None,
+    def __init__(self,  project_name, target_size, train_folder,
+                 validation_folder, holdout_folder, optimizer='Adam',
+                 model_fxn=None, augmentation_strength=0.1, preprocessing=None,
                  batch_size=16, GPUS=None, metrics=['accuracy']):
         """
         Initialize class with basic attributes
@@ -150,13 +152,15 @@ class ClassificationNet(object):
 
     def make_callbacks(self):
             # Initialize tensorboard for monitoring
-        tensorboard = keras.callbacks.TensorBoard(
-            log_dir="models/" + self.project_name, histogram_freq=0, batch_size=self.batch_size, write_graph=True, embeddings_freq=0)
+        tensorboard = keras.callbacks.TensorBoard(log_dir="models/" + self.project_name,
+                                                  histogram_freq=0, batch_size=self.batch_size,
+                                                  write_graph=True, embeddings_freq=0)
 
         # Initialize model checkpoint to save best model
         self.savename = 'models/'+self.project_name+"/"+self.project_name+'.hdf5'
         mc = keras.callbacks.ModelCheckpoint(self.savename,
-                                             monitor='val_loss', verbose=0, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+                                             monitor='val_loss', verbose=0, save_best_only=True,
+                                             save_weights_only=False, mode='auto', period=1)
         self.callbacks = [mc, tensorboard]
 
     def _training_init(self, train_folder, validation_folder, holdout_folder, optimizer, model_fxn):
@@ -183,7 +187,9 @@ class ClassificationNet(object):
             """
 
         if self.GPUS:
-            # Intialize a multi-GPU model utilizing keras.utils.multi_gpu_model and then overriding the save and load models so that we can save in a format that the model can be read as a serial model
+            # Intialize a multi-GPU model utilizing keras.utils.multi_gpu_model and
+            # then overriding the save and load models so that we can save in a
+            # format that the model can be read as a serial model
             self.model = ModelMGPU(self.model)
 
         history = self.model.fit_generator(self.train_generator,
@@ -233,7 +239,8 @@ class ClassificationNet(object):
 
     def process_img(self, img_path):
         """
-        Loads image from filename, preprocesses it and expands the dimensions because the model predict function expects a batch of images, not one image
+        Loads image from filename, preprocesses it and expands the dimensions because the
+        model predict function expects a batch of images, not one image
         Args:
             img_path (str): file to load
         Returns:
@@ -288,7 +295,9 @@ class LayerTransferClassificationNet(ClassificationNet):
     def create_learn_rate_dict(self, model, base_layer_learn_ratio=0.1,
                                final_layer_learn_ratio=1):
         """
-        Since we're using a custom optimizer with a different learning rate for each layer, we need to initialize a dictionary of layer names and weights. Here I'm using one lower value for all but the last layer
+        Since we're using a custom optimizer with a different learning rate for each layer,
+        we need to initialize a dictionary of layer names and weights.
+        Here I'm using one lower value for all but the last layer
         """
         layer_mult = dict(zip([layer.name for layer in model.layers],
                               itertools.repeat(base_layer_learn_ratio)))
@@ -338,8 +347,10 @@ def main(args):
                          input_shape=target_size + (3,))
     opt = Adam_lr_mult
 
-    lt_model = LayerTransferClassificationNet(args.model_name, target_size=target_size, train_folder=train_folder, validation_folder=validation_folder,
-                                              holdout_folder=holdout_folder, model_fxn=model_fxn, optimizer=opt, augmentation_strength=0.4, preprocessing=preprocess_input,  batch_size=batch_size)
+    lt_model = LayerTransferClassificationNet(args.model_name, target_size=target_size, train_folder=train_folder,
+                                              validation_folder=validation_folder, holdout_folder=holdout_folder,
+                                              model_fxn=model_fxn, optimizer=opt, augmentation_strength=0.4,
+                                              preprocessing=preprocess_input,  batch_size=batch_size)
 
     lt_model.fit(epochs)
 
