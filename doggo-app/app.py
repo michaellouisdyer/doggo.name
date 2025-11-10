@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image, ExifTags
 # Flask utils
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, g
 from gevent.pywsgi import WSGIServer
 from keras.applications.xception import preprocess_input
 # Keras
@@ -25,7 +25,6 @@ from models.Adam_lr_mult import Adam_lr_mult
 
 # Define a flask app
 app = Flask(__name__)
-
 
 def rotate_save(f, file_path):
     try:
@@ -70,7 +69,7 @@ def model_predict(img_path,model):
     im =  process_img(img_path)
     preds =  model.predict(im)
     top_3 = preds.argsort()[0][::-1][:3] # sort in reverse order and return top 3 indices
-    top_3_names = class_names[top_3]
+    top_3_names = g.class_names[top_3]
     top_3_percent = preds[0][[top_3]]*100
     top_3_text = '<br>'.join([f'{name}: {percent:.2f}%' for name, percent in zip(top_3_names,top_3_percent)])
     return top_3_text
@@ -91,12 +90,12 @@ def upload():
         # Save the file to ./uploads
         basepath = os.path.dirname(__file__)
         file_path = os.path.join(
-            basepath, 'uploads', secure_filename(f.filename))
+            basepath, '/data/uploads', secure_filename(f.filename))
         # f.save(file_path)
         rotate_save(f, file_path)
 
         # Make prediction
-        preds = model_predict(file_path, model)
+        preds = model_predict(file_path, g.model)
 
         # Delete it so we don't clutter our server up
         os.remove(file_path)
@@ -104,15 +103,11 @@ def upload():
         return preds
     return None
 
-
-
-
-
-if __name__ == '__main__':
-
+@app.before_request
+def init_model():
     MODEL_PATH = 'models/xc_adam_doggo_huge.04-0.69.hdf5'
     with open ('models/class_names.pkl', 'rb') as f:
-        class_names = np.array(pickle.load(f))
+        g.class_names = np.array(pickle.load(f))
 
 
     # Load trained model
@@ -120,11 +115,30 @@ if __name__ == '__main__':
     model = load_model(MODEL_PATH, custom_objects={'Adam_lr_mult': Adam_lr_mult})
     model._make_predict_function()
     print('Model loaded. Start serving...')
+    g.model = model
+
+
+
+
+
+
+# if __name__ == '__main__':
+
+#     MODEL_PATH = '/doggo-app/models/xc_adam_doggo_huge.04-0.69.hdf5'
+#     with open ('/doggo-app/models/class_names.pkl', 'rb') as f:
+#         class_names = np.array(pickle.load(f))
+
+
+#     # Load trained model
+#     # Since I used a custom optimizer, I have to define and load it here
+#     model = load_model(MODEL_PATH, custom_objects={'Adam_lr_mult': Adam_lr_mult})
+#     model._make_predict_function()
+#     print('Model loaded. Start serving...')
 
 
 
     # app.run(port=5002, debug=True)
 
     # Serve the app with gevent
-    http_server = WSGIServer(('0.0.0.0',5000), app)
-    http_server.serve_forever()
+    # http_server = WSGIServer(('0.0.0.0',80), app)
+    # http_server.serve_forever()
